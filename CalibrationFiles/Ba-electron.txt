@@ -1,0 +1,12 @@
+#Peaks on a table
+#Peak energies in same unit. If user want to use same energy difference between high and low energy, write the energy difference in Energy_low
+#Energy,Energy_difference(Energy_low),(Energy_high)
+44.971,2
+75.197,2
+124.628,2
+155.1,2
+187.249,2
+240.413,2
+267.19,2,*
+320.032,2
+349.4039,2,*

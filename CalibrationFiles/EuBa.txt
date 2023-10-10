@@ -1,0 +1,19 @@
+#Peaks on a table
+#Peak energies unit in keV. If user want to use same energy difference in high and low energy,write the energy difference in Energy low #Energy,Energy low(or Energy difference),(Energy high)
+#The *-marked energies are used as a first selection in rawCalibration.py
+80.997,3
+121.7825,3,*
+244.6989,3
+276.398,3
+302.853,3
+344.281,3,2
+356.017,2,3
+383.851,3
+411.115,3
+443.965,3
+510.999,3
+778.903,3,*
+867.390,3
+964.055,3
+1112.087,3
+1408.022,3
