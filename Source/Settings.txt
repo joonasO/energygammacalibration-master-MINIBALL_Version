@@ -1,0 +1,4 @@
+Channel range (min, max):2500000,90000000
+Amount of the extra peaks for calibration (min, max):1,4
+Peak width(in units of channels):7
+Gaussian fit:0

@@ -1,0 +1,24 @@
+This code works in python 3.6
+
+
+sudo port install py36-tkinter sqlite3-tcl
+
+Install pip:
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+sudo python3.6 get-pip.py --user
+sudo python3.6 -m pip install --user numpy scipy matplotlib ipython jupyter pandas sympy nose
+
+For the new python3.6 version you should also replace in energyCalibProgram.py the following names:
+ - Replace NavToolbar2TkAgg with NavToolbar2Tk
+ - Replace NavigationToolbar2TkAgg with NavigationToolbar2Tk
+
+How to run it:
+ python3.6 energyCalibProgram.py 
+
+
+ToTest:
+
+sudo port install py36-tkinter sqlite3-tcl py36-numpy py36-scipy py36-matplotlib py36-ipython py36-jupyter py36-pandas py36-sympy py36-nose
+
+
+

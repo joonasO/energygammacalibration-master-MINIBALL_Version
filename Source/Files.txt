@@ -1,0 +1,5 @@
+/Users/jokaojal/Jatko-opinnot/project/EnergyCalibration/Input/Channel_1280_,Raw.dat
+/Users/jokaojal/Jatko-opinnot/project/EnergyCalibration/Input/Channel_1281_,Raw.dat
+/Users/jokaojal/Jatko-opinnot/project/EnergyCalibration/Input/Channel_1282_,Raw.dat
+/Users/jokaojal/Jatko-opinnot/project/EnergyCalibration/Input/Channel_1283_,Raw.dat
+/Users/jokaojal/Jatko-opinnot/project/EnergyCalibration/Input/Channel_1284_,Raw.dat
