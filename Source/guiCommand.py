@@ -91,12 +91,12 @@ def guiCommand():
             path,slash,fileName=inputFile.rpartition('/')
 
 
-            peakPosition,peakWidth,prominence=peakSearchGui.peakSearchGui(channels,counts,fileName,channelStart,channelStop,outputPath,output,prominence,peaksnumber,minPeaks,maxPeaks,peakInChannelWidth)
+            peakPosition_channel,peakWidth,prominence=peakSearchGui.peakSearchGui(channels,counts,fileName,channelStart,channelStop,outputPath,output,prominence,peaksnumber,minPeaks,maxPeaks,peakInChannelWidth)
 
             if(fitGaussian==1):
                 peaks=[]
-                for i in range(len(peakPosition)):
-                    position=gaussianFit.gaussianFitOnData(channels,counts,peakPosition[i],peakWidth[i],fileName,outputPath,output)
+                for i in range(len(peakPosition_channel)):
+                    position=gaussianFit.gaussianFitOnData(channels,counts,peakPosition_channel[i],peakWidth[i],fileName,outputPath,output)
                     peaks=np.append(peaks,position)
                 positionsOrig=[]
                 for peak in peaks:

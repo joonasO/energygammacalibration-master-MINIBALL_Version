@@ -38,7 +38,7 @@ def readEnergies(energyPath,energyFile):
     energiesHigh=np.asarray(energiesHigh)
     if(len(selections)>1):
         if(selections>2):
-            print("More than two is selected! Program select first and last")
+            print("There is more than two is selected as starting points for linear calibration in calibration file! Program will select first and last")
         selections1=float(selection[0])
         selections2=float(selection[-1])
     else:
