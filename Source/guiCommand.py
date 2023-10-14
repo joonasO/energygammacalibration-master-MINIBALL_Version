@@ -9,6 +9,7 @@ import readEnergies
 import rawCalibration
 import readGUIFile
 import readSettings
+import readInputFile
 import readOutput
 import datetime
 from pathlib import Path
@@ -68,21 +69,9 @@ def guiCommand():
 
 
     #Looping over the input files and doing the calibration for each calibration spectrum
+    #channels, counts= readInputFile.readInputFiles(inputFiles,fileNumber,lengthInputFileList)
     for inputFile in inputFiles:
-        process=int(float(fileNumber)/float(lengthInputFileList)*100)
-        print(str(process)+"%")
-        print("File name: "+inputFile)
-        file=Path(inputFile)
-        if(file.is_file()):
-            with open(inputFile,"r") as f:
-                counts=[]
-                channels=[]
-                for line in f:
-                    channel,count=line.split(" ")
-                    channel=float(channel)
-                    count=float(count.strip())
-                    channels.append(channel)
-                    counts.append(count)
+            channels, counts= readInputFile.readInputFiles(inputFile,fileNumber,lengthInputFileList)
 
         #Need to change the array type
             channels=np.asarray(channels)
@@ -91,12 +80,12 @@ def guiCommand():
             path,slash,fileName=inputFile.rpartition('/')
 
 
-            peakPosition_channel,peakWidth,prominence=peakSearchGui.peakSearchGui(channels,counts,fileName,channelStart,channelStop,outputPath,output,prominence,peaksnumber,minPeaks,maxPeaks,peakInChannelWidth)
-
+            peak_index,peakWidth_index,prominence,peak_channel,peak_width=peakSearchGui.peakSearchGui(channels,counts,fileName,channelStart,channelStop,outputPath,output,prominence,peaksnumber,minPeaks,maxPeaks,peakInChannelWidth)
+            print(peak_index)
             if(fitGaussian==1):
                 peaks=[]
-                for i in range(len(peakPosition_channel)):
-                    position=gaussianFit.gaussianFitOnData(channels,counts,peakPosition_channel[i],peakWidth[i],fileName,outputPath,output)
+                for i in range(len(peak_index)):
+                    position=gaussianFit.gaussianFitOnData(channels,counts,peak_index[i],peak_channel[i],peakWidth_index[i],peak_width[i],fileName,outputPath,output)
                     peaks=np.append(peaks,position)
                 positionsOrig=[]
                 for peak in peaks:
@@ -105,7 +94,7 @@ def guiCommand():
             #If user don't want to use gaussian. Remeber to take central bin
             else:
                 positionsOrig=[]
-                for peak in peakPosition:
+                for peak in peak_index:
                     peakCenter=peak#+0.5*(channels[1]-channels[0])
                     positionsOrig=np.append(positionsOrig,peakCenter)
             positions,energies=rawCalibration.rawCalibration(positionsOrig,energiesOrig,energiesLow,energiesHigh,selection1,selection2,fileName,outputPath,output)
@@ -127,7 +116,7 @@ def guiCommand():
 
             energyCalibration.energyCalibrations(positions,energies,fileName,outputPath,1)
 
-        else:
-            print("No file")
+    else:
+        print("No file")
         fileNumber=fileNumber+1
     print("100% \nCalibration complete!")

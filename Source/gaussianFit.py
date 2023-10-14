@@ -16,7 +16,8 @@ import os
 # par[3]=constant
 # par[4]=linear term
 def gaussFit( x, *par ):
-    return par[0]*np.exp( -(x-par[1])**2/(2*par[2]**2) )*0.5*(1+scipy.special.erf(par[3]*((x-par[1])/par[2]))) + par[4] + par[5]*(x)
+    return par[0]*np.exp( -(x-par[1])**2/(2*par[2]**2) )*0.5 + par[3] + par[4]*(x)
+    #return par[0]*np.exp( -(x-par[1])**2/(2*par[2]**2) )*0.5*(1+scipy.special.erf(par[3]*((x-par[1])/par[2]))) + par[4] + par[5]*(x)
 #Fitting the background for estimate. Fit is first order polynomy
 def firstDegree(x,*p):
     return p[1]+p[0]*(x)
@@ -37,11 +38,10 @@ def fitGaussianInLoop(channels,counts,p0,counts_err,inputFile,outputPath):
 
             ptest[0]=-ptest[0]
             ptest[4]=-ptest[4]
-            ptest[5]=-ptest[5]
-            maxGauss = scipy.optimize.fmin( gaussFit, ptest[1],args=(ptest[0],ptest[1],ptest[2],ptest[3],ptest[4],ptest[5]),disp=False,full_output=False)
+            maxGauss = scipy.optimize.fmin( gaussFit, ptest[1],args=(ptest[0],ptest[1],ptest[2],ptest[3],ptest[4]),disp=False,full_output=False)
             ptest[0]=-ptest[0]
             ptest[4]=-ptest[4]
-            ptest[5]=-ptest[5]
+            
             if(maxGauss>0 and maxGauss<10000):
                 positionPeak=maxGauss
             else:
@@ -63,7 +63,7 @@ def fitGaussianInLoop(channels,counts,p0,counts_err,inputFile,outputPath):
 
         return p,pcov,positionPeak
 # The fitting function which takes data and peak positions and width of the peak. Also take out the information that does the user want to save the figures from fits.
-def gaussianFitOnData(channels_orig,counts_orig,peak,width,inputFile,outputPath,output):
+def gaussianFitOnData(channels_orig,counts_orig,peak,peak_channel,width,width_channel,inputFile,outputPath,output):
     outputPath=outputPath+'/GaussianFit/'
     #Create folder for the figures of fits
     if not os.path.exists(outputPath):
@@ -71,10 +71,14 @@ def gaussianFitOnData(channels_orig,counts_orig,peak,width,inputFile,outputPath,
     # Choose data so that channel position is the in middle of bin
 
     counts_err_orig=np.sqrt(counts_orig)
-    min=int(peak-width/2-6)
+    
+    print("peakWidth:"+str(width))
+    min=int(peak-width*0.75)
     if(min<0):
         min=0
-    max=int(peak+width/2+6)
+    max=int(peak+width*0.75)
+    print("max:"+str(max))
+    print("min:"+str(min))
     slope=(-counts_orig[max]-counts_orig[min])/(max-min)
     constant=counts_orig[min]-slope*min
     a=[constant,slope,0]
@@ -114,7 +118,7 @@ def gaussianFitOnData(channels_orig,counts_orig,peak,width,inputFile,outputPath,
 
 
     # Initial quesses and fitting
-    p0 = [counts_orig[peak]*2, peak*(channels_orig[1]-channels_orig[0]), (width-5)*(1/(2.333*2)),0, a[1], a[0]]
+    p0 = [counts_orig[peak]*2, peak_channel, (width_channel)*(1/(2.333*2)), a[1], a[0]]
 
     p,pcov,peakPostion=fitGaussianInLoop(channels,counts,p0,counts_err,inputFile,outputPath)
     count_err=np.sqrt(gaussFit(channels,*p))
@@ -131,8 +135,8 @@ def gaussianFitOnData(channels_orig,counts_orig,peak,width,inputFile,outputPath,
         f.write( 'normchi2/dof = {:g}\r\n'.format( chi2/dof ) )
         f.write("Initial parameters\r\n")
         f.write( "A     = {:g}\r\n".format( counts_orig[peak] ))
-        f.write( "x0    = {:g}\r\n".format( peak ))
-        f.write( "sigma = {:g}\r\n".format((width-5)*(1/(2.3332*2)) ))
+        f.write( "x0    = {:g}\r\n".format( peak_channel ))
+        f.write( "sigma = {:g}\r\n".format((width_channel-5)*(1/(2.3332*2)) ))
         f.write( "bgrA  = {:g}\r\n".format( slope))
         f.write( "bgrB  = {:g}\r\n".format( constant ))
         f.write("Fit parameters\r\n")

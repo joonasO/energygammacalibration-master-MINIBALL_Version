@@ -66,24 +66,32 @@ def peakSearchGui(channels,counts,inputFile,startChannel,stopChannel,outputPath,
 
 
 
-    peaksWidth=signal.peak_widths(counts,peak_index)
+    #peaksWidth=signal.peak_widths(counts,peak_index)
 
     plt.plot(channels,counts)
     plt.plot(channels[peak_index],counts[peak_index],"x")
     #This gives approximately the FWHM of peak
     peaksWidth_half=signal.peak_widths(counts,peak_index,rel_height=0.5)
+    print(peaksWidth_half)
     halfWidth=(peaksWidth_half[0])
     #The relation between width of 1/20 of Gaussian FWTM and Gaussian FWHM: FWTM/FWHM≈2.
     #Also we add constant 5 for width to make background approximation better for Gaussian fit.
     Width=2*halfWidth+5
+    print(Width)
+    Width_channel=Width*(channels[1]-channels[0])
+    peak_channel=channels[peak_index]
+    print("peakChannels:")
+    print(peak_channel)
+    print("peak width:")
+    print(Width_channel)
 
     if(output=="Y"):
         plt.hlines(*peaksWidth_half[1:], color="C2")
         plt.axis([startChannels*(channels[1]-channels[0]),stopChannels*(channels[1]-channels[0]),0,maxHeight])
-        plt.savefig(outputPath+'Plot_Peaks_'+inputFile+'_Spectrum.png')
+        plt.savefig(outputPath+'Plot_Peaks_Total_'+inputFile+'_Spectrum.png')
         for i in range(1,5,1):
             plt.axis([(startChannels+int(i-1)*(stopChannels-startChannels)/5)*(channels[1]-channels[0]),(startChannels+int((i)*(stopChannels-startChannels)/5))*(channels[1]-channels[0]),0,maxHeight])
-            plt.savefig(outputPath+'Plot_Peaks_'+inputFile+str(i)+'.png')
+            plt.savefig(outputPath+'Plot_Peaks_Part_'+inputFile+"_"+str(i)+'.png')
         plt.cla()
 
-    return peak_index,Width,prominence
+    return peak_index,Width,prominence,peak_channel,Width_channel
